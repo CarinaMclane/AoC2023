@@ -1,6 +1,7 @@
 import aoc.day1.Day1
 import aoc.day2.Day2
 import aoc.day3.Day3
+import aoc.day4.Day4
 
 fun main(args: Array<String>) {
     println("~~~~~~~~~~ Advent of Code ~~~~~~~~~~")
@@ -15,4 +16,8 @@ fun main(args: Array<String>) {
     println("-------------- Day 3 ---------------")
     println("    Task 1: ${Day3().solveTask1()}")
     println("    Task 2: ${Day3().solveTask2()}")
+    println()
+    println("-------------- Day 4 ---------------")
+    println("    Task 1: ${Day4().solveTask1()}")
+    println("    Task 2: ${Day4().solveTask2()}")
 }
