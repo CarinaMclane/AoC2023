@@ -118,29 +118,21 @@ class PipeSystem(val input: MutableList<String>) {
             val currChar = getChar(current.first, current.second)
 
             if (dirX < 0) {
-                if (fillSpace(current.first, current.second - 1)) filledSpaces++
-                if (currChar == 'F') {
-                    if (fillSpace(current.first-1, current.second-1)) filledSpaces++
-                }
+                fillSpace(current.first, current.second - 1)
+                fillSpace(prev.first, prev.second - 1)
             }
             if (dirX > 0) {
-                if (fillSpace(current.first, current.second + 1)) filledSpaces++
-                if (currChar == 'J') {
-                    if (fillSpace(current.first+1, current.second+1)) filledSpaces++
-                }
+                fillSpace(current.first, current.second + 1)
+                fillSpace(prev.first, prev.second + 1)
             }
 
             if (dirY > 0) {
-                if (fillSpace(current.first - 1, current.second)) filledSpaces++
-                if (currChar == 'L') {
-                    if(fillSpace(current.first-1, current.second+1)) filledSpaces++
-                }
+                fillSpace(current.first - 1, current.second)
+                fillSpace(prev.first - 1, prev.second)
             }
             if (dirY < 0) {
-                if (fillSpace(current.first+1, current.second)) filledSpaces++
-                if (currChar == '7') {
-                    if (fillSpace(current.first+1, current.second-1)) filledSpaces++
-                }
+                fillSpace(current.first+1, current.second)
+                fillSpace(prev.first+1, prev.second)
             }
 
 
@@ -161,7 +153,7 @@ class PipeSystem(val input: MutableList<String>) {
         println("Grown map:")
         charMap.forEach { println(it) }
 
-        val sum = charMap.sumOf{line -> line.count{it == 'x'}}
+        val sum = charMap.sumOf{line -> line.count{it == '#'}}
         return sum
     }
 
@@ -191,7 +183,7 @@ class PipeSystem(val input: MutableList<String>) {
         for (y in charMap.indices) {
             for (x in charMap[y].indices) {
                 if (loopCoords.none{it.first == x && it.second == y}) {
-                    charMap[y][x] = '.'
+                    charMap[y][x] = ' '
                 }
             }
         }
@@ -199,19 +191,19 @@ class PipeSystem(val input: MutableList<String>) {
 
 
 
-    private fun growFilledAreas() : Int {
+    private fun growFilledAreas(fillChar: Char = '#') : Int {
         var filledSpaces = 0
         for (y in charMap.indices) {
             for (x in charMap[y].indices) {
-                if (charMap[y][x] == 'x') {
-                    if(fillSpace(x,y+1))filledSpaces++
-                    if(fillSpace(x,y-1))filledSpaces++
-                    if(fillSpace(x+1,y))filledSpaces++
-                    if(fillSpace(x-1,y))filledSpaces++
-                    if(fillSpace(x+1,y+1))filledSpaces++
-                    if(fillSpace(x+1,y-1))filledSpaces++
-                    if(fillSpace(x-1,y-1))filledSpaces++
-                    if(fillSpace(x-1,y+1))filledSpaces++
+                if (charMap[y][x] == fillChar) {
+                    if(fillSpace(x,y+1, fillChar))filledSpaces++
+                    if(fillSpace(x,y-1, fillChar))filledSpaces++
+                    if(fillSpace(x+1,y, fillChar))filledSpaces++
+                    if(fillSpace(x-1,y, fillChar))filledSpaces++
+                    if(fillSpace(x+1,y+1, fillChar))filledSpaces++
+                    if(fillSpace(x+1,y-1, fillChar))filledSpaces++
+                    if(fillSpace(x-1,y-1, fillChar))filledSpaces++
+                    if(fillSpace(x-1,y+1, fillChar))filledSpaces++
                 }
             }
         }
@@ -219,13 +211,13 @@ class PipeSystem(val input: MutableList<String>) {
         return filledSpaces
     }
 
-    private fun fillSpace(x: Int, y: Int) : Boolean {
+    private fun fillSpace(x: Int, y: Int, fillChar: Char = '#') : Boolean {
         if (!inBounds(x,y))
             return false
 
         if (loopCoords.none{it.first == x && it.second == y} &&
-            charMap[y][x] != 'x') {
-            charMap[y][x] = 'x'
+            charMap[y][x] != fillChar) {
+            charMap[y][x] = fillChar
             return true
         }
 
