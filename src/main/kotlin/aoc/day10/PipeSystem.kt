@@ -99,16 +99,11 @@ class PipeSystem(val input: MutableList<String>) {
         // ensure clockwise
         if (dir > 0) loopCoords.reverse()
 
-        println("Loop: $loopCoords")
-        println("Clockwise (should be -1): ${determineDirection(loopCoords)}")
-
         val it = loopCoords.iterator()
         var prev = it.next()
         var filledSpaces = 0
 
         clearMap()
-        println("Map:")
-        charMap.forEach { println(it) }
 
         while(it.hasNext()) {
             val current = it.next()
@@ -140,18 +135,12 @@ class PipeSystem(val input: MutableList<String>) {
             prev = current
         }
 
-        println("Filled map:")
-        charMap.forEach { println(it) }
-
         var newFilledSpaces = growFilledAreas()
         while (newFilledSpaces != 0)
         {
             filledSpaces += newFilledSpaces
             newFilledSpaces = growFilledAreas()
         }
-
-        println("Grown map:")
-        charMap.forEach { println(it) }
 
         val sum = charMap.sumOf{line -> line.count{it == '#'}}
         return sum
