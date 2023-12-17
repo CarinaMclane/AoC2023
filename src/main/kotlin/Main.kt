@@ -1,6 +1,7 @@
 import aoc.day1.Day1
 import aoc.day10.Day10
 import aoc.day11.Day11
+import aoc.day12.Day12
 import aoc.day2.Day2
 import aoc.day3.Day3
 import aoc.day4.Day4
@@ -54,5 +55,9 @@ fun main(args: Array<String>) {
     println()
     println("-------------- Day 11 ---------------")
     println("    Task 1: ${Day11().solveTask1()}")
-
+    println("    Task 2: ${Day11().solveTask2()}")
+    println()
+    println("-------------- Day 12 ---------------")
+    println("    Task 1: ${Day12().solveTask1()}")
+    println("    Task 2: ${Day12().solveTask2()}")
 }

@@ -3,40 +3,29 @@ package aoc.day11
 import kotlin.math.abs
 
 class GalaxyMap(input: List<String>) {
-    var map: MutableList<String>
-    var colDists : List<Int>
-    var lineDists : List<Int>
+    var map: List<String>
+    var colDists : List<Char>
+    var rowDists : List<Char>
     init {
-        val tempMap = input.flatMap { line ->
-            if (line.trim().all {it == '.'}) {
-                listOf(line,line)
-            } else {
-                listOf(line)
-            }
+        map = input
+
+        val countsForEachIndex = (0..<map[0].length).map { index ->
+            map.count { it[index] != '.' }
         }
 
-        val countsForEachIndex = (0..<tempMap[0].length).map { index ->
-            tempMap.count { it[index] != '.' }
+        colDists = countsForEachIndex.map {count ->
+            if (count > 0)
+                ' '
+            else
+                '*'
         }
 
-        tempMap.forEach { println(it) }
-
-        map = mutableListOf<String>()
-        tempMap.forEach {line ->
-            val sb = StringBuilder()
-            line.forEachIndexed{idx, char ->
-                sb.append(char)
-                if (countsForEachIndex[idx] == 0)
-                    sb.append('.')
-            }
-            map.add(sb.toString())
+        rowDists = map.map { line ->
+            if (line.count {it != '.'} > 0)
+                ' '
+            else
+                '*'
         }
-
-        println("Num galaxies per column:")
-        println(countsForEachIndex)
-
-        map.forEach { println(it) }
-
     }
 
     fun getGalaxyLocations() : List<Pair<Int,Int>> {
@@ -53,17 +42,40 @@ class GalaxyMap(input: List<String>) {
         return locations
     }
 
-    fun calcGalaxyDistances(galaxies: List<Pair<Int,Int>>) : List<Int> {
-
-        val dists = mutableListOf<Int>()
+    fun calcGalaxyDistances(galaxies: List<Pair<Int,Int>>, mult:Int = 2) : List<Long> {
+        val dists = mutableListOf<Long>()
         for (i in galaxies.indices) {
             for (j in i+1..<galaxies.size) {
-                val result = Pair(abs(galaxies[j].first - galaxies[i].first),abs(galaxies[j].second - galaxies[i].second))
-                dists.add(result.first + result.second)
-                println("${i+1} to ${j+1}: ${result.first + result.second} ")
+                val result = getDistance(galaxies[j], galaxies[i], mult)
+                dists.add(result.toLong())
             }
         }
         return dists
+    }
+
+    private fun getDistance(a: Pair<Int, Int>, b: Pair<Int, Int>, mult: Int = 2): Int {
+        val horDist = horizontalDist(a.second, b.second, mult)
+        val vertDist = verticalDist(a.first, b.first, mult)
+        return horDist + vertDist
+    }
+
+    private fun horizontalDist(a: Int, b: Int, mult: Int = 2): Int {
+        val max = maxOf(a,b)
+        val min = minOf(a,b)
+
+        var dist = 0
+
+        return colDists.filterIndexed{ idx, _ ->
+            IntRange(min,max-1).contains(idx)
+        }.sumOf {if (it == '*') mult else 1}
+    }
+
+    private fun verticalDist(a: Int, b: Int, mult: Int = 2): Int {
+        val max = maxOf(a,b)
+        val min = minOf(a,b)
+        return rowDists.filterIndexed{idx, _ ->
+            IntRange(min,max-1).contains(idx)
+        }.sumOf { if (it == '*') mult else 1 }
     }
 
 }
